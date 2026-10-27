@@ -131,7 +131,7 @@ class RMMotor : public Motor
    */
   struct BusState
   {
-    LibXR::CAN* can{};  ///< CAN 对象 CAN object
+    LibXR::CAN* can{};                               ///< CAN 对象 CAN object
     MotorGroupState groups[MOTOR_CTRL_ID_NUMBER]{};  ///< 4 个控制组 4 control groups
     BusState* next{};  ///< 注册表链表的下一项 Next entry of the registry list
   };
@@ -299,6 +299,8 @@ class RMMotor : public Motor
    *         Reference to the feedback structure.
    */
   const Feedback& GetFeedback() override { return feedback_; }
+
+  float GetFeedbackTorquePolarity() const override { return reverse_flag_; }
 
   /**
    * @brief 下发控制命令，仅处理 `MODE_TORQUE` 与 `MODE_CURRENT`，其余模式被忽略。
