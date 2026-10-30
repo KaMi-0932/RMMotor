@@ -300,8 +300,6 @@ class RMMotor : public Motor
    */
   const Feedback& GetFeedback() override { return feedback_; }
 
-  float GetFeedbackTorquePolarity() const override { return reverse_flag_; }
-
   /**
    * @brief 下发控制命令，仅处理 `MODE_TORQUE` 与 `MODE_CURRENT`，其余模式被忽略。
    *        Send a control command; only `MODE_TORQUE` and `MODE_CURRENT` are handled,
@@ -436,8 +434,8 @@ class RMMotor : public Motor
 
     feedback_.abs_angle = LibXR::CycleValue<float>(feedback_.position);
     feedback_.omega = feedback_.velocity * (static_cast<float>(LibXR::TWO_PI) / 60.0f);
-    feedback_.torque =
-        static_cast<float>(raw_current) * KGetTorque() * GetCurrentMAX() / MOTOR_CUR_RES;
+    feedback_.torque = static_cast<float>(raw_current) * KGetTorque() * GetCurrentMAX() *
+                       reverse_flag_ / MOTOR_CUR_RES;
     feedback_.temp = static_cast<float>(raw_temp);
     feedback_.state = 1;
   }
